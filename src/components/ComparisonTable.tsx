@@ -64,12 +64,15 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({
               {products.map((product) => {
                 const provider = PROVIDERS.find((p) => p.id === product.providerId);
                 const isExpanded = expandedId === product.id;
-                const calc = calculateFinancing(
-                  sampleAmount,
-                  product.annualProfitRate,
-                  sampleTenureYears,
-                  product.rateMethod
-                );
+                const isTakaful = product.productKind === 'TAKAFUL';
+                const calc = isTakaful
+                  ? undefined
+                  : calculateFinancing(
+                      sampleAmount,
+                      product.annualProfitRate,
+                      sampleTenureYears,
+                      product.rateMethod
+                    );
 
                 return (
                   <React.Fragment key={product.id}>
@@ -113,20 +116,24 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({
                       {/* Profit Rate */}
                       <td className="py-4 px-4">
                         <span className="text-sm font-extrabold text-emerald-900 font-mono block">
-                          {formatProfitRate(product.annualProfitRate)}
+                           {isTakaful
+                             ? formatCurrency(product.takafulData?.annualContribution || 0, product.country, locale)
+                             : formatProfitRate(product.annualProfitRate)}
                         </span>
                         <span className="text-[10px] text-slate-500">
-                          {product.rateMethod === 'flat' ? t('common.flatRate') : t('common.reducingRate')}
+                           {isTakaful ? 'Annual contribution' : product.rateMethod === 'flat' ? t('common.flatRate') : t('common.reducingRate')}
                         </span>
                       </td>
 
                       {/* Monthly Instalment */}
                       <td className="py-4 px-4">
                         <span className="text-sm font-extrabold text-slate-900 font-mono block">
-                          {formatCurrency(calc.monthlyInstalment, product.country, locale)}
+                           {isTakaful
+                             ? formatCurrency(product.takafulData?.coverageAmount || 0, product.country, locale)
+                             : formatCurrency(calc?.monthlyInstalment || 0, product.country, locale)}
                         </span>
                         <span className="text-[10px] text-slate-500">
-                          Total: {formatCurrency(calc.totalPayable, product.country, locale)}
+                           {isTakaful ? 'Coverage amount' : `Total: ${formatCurrency(calc?.totalPayable || 0, product.country, locale)}`}
                         </span>
                       </td>
 
@@ -161,10 +168,10 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({
 
                           <button
                             type="button"
-                            onClick={() => onApply(product)}
+                            onClick={() => (isTakaful ? setActivePdsProduct(product) : onApply(product))}
                             className="px-3.5 py-2 bg-emerald-800 hover:bg-emerald-950 text-white font-bold rounded-xl transition shadow-xs flex items-center gap-1.5 cursor-pointer text-xs"
                           >
-                            <span>{t('common.apply')}</span>
+                            <span>{isTakaful ? 'View Coverage' : t('common.apply')}</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </button>
                         </div>

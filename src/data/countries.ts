@@ -11,7 +11,7 @@ export const COUNTRIES: Record<string, CountryConfig> = {
     supportedLocales: ['en', 'ms'],
     flag: '🇲🇾',
     phoneCode: '+60',
-    activeCategories: ['personal', 'vehicle', 'property', 'business', 'equipment', 'trade'],
+    activeCategories: ['personal', 'vehicle', 'property', 'business', 'equipment', 'trade', 'takaful'],
     regulatoryBody: 'Bank Negara Malaysia (BNM) & Shariah Advisory Council (SAC)',
     shariahFrameworkNote: 'Governed under Islamic Financial Services Act (IFSA 2013) & BNM Shariah Governance Framework.',
   },

@@ -2,6 +2,24 @@ import { FinancingProvider } from '../types';
 
 export const PROVIDERS: FinancingProvider[] = [
   {
+    id: 'provider-takaful-my',
+    name: 'D8 Amanah Takaful Berhad',
+    code: 'D8_TAKAFUL_MY',
+    country: 'MY',
+    type: 'Islamic Financial Institution',
+    logoText: 'DA',
+    colorScheme: {
+      primary: '#047857',
+      bg: '#ecfdf5',
+      border: '#a7f3d0',
+    },
+    rating: 4.8,
+    reviewsCount: 640,
+    shariahBoardSummary: 'Supervised by an independent Shariah committee under Malaysia\'s Takaful governance framework.',
+    headquarters: 'Kuala Lumpur, Malaysia',
+    active: true,
+  },
+  {
     id: 'provider-a',
     name: 'Provider A Islamic Bank',
     code: 'PROV_A',

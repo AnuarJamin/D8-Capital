@@ -2,6 +2,56 @@ import { FinancingProduct } from '../types';
 
 export const PRODUCTS: FinancingProduct[] = [
   // ==========================================
+  // MALAYSIA — FAMILY TAKAFUL PROTECTION
+  // ==========================================
+  {
+    id: 'my-takaful-01',
+    providerId: 'provider-takaful-my',
+    country: 'MY',
+    category: 'takaful',
+    name: 'Amanah Family Takaful Protection',
+    shariahStructure: 'Tabarru / Wakalah',
+    rateMethod: 'flat',
+    annualProfitRate: 0,
+    minAmount: 50000,
+    maxAmount: 1000000,
+    minTenureYears: 1,
+    maxTenureYears: 30,
+    marginOfFinancing: 'Protection amount from RM 50,000 to RM 1,000,000',
+    processingFee: 'RM 0.00 digital enrolment fee',
+    stampDutyNote: 'No financing stamp duty. Applicable policy charges are disclosed before enrolment.',
+    takafulNote: 'Family protection based on Tabarru\' contributions with Wakalah administration.',
+    earlySettlementIbra: 'Not applicable. Contributions and benefits follow the certificate terms.',
+    eligibilitySummary: 'Malaysian residents aged 18 to 60, subject to health declaration and underwriting requirements.',
+    requiredDocumentsSummary: [
+      'MyKad copy',
+      'Health declaration',
+      'Nominee details',
+    ],
+    keyFeatures: [
+      'Death and total permanent disability protection',
+      'Optional critical illness add-on',
+      'Flexible monthly or annual contribution options',
+      'Transparent Shariah-compliant Tabarru fund structure',
+    ],
+    targetAudience: 'Individual',
+    productKind: 'TAKAFUL',
+    takafulData: {
+      coverageType: 'Family protection and total permanent disability',
+      coverageAmount: 500000,
+      annualContribution: 1800,
+      contributionFrequency: 'Monthly or annual',
+    },
+    featured: true,
+    pdsData: {
+      productDescription: 'A Shariah-compliant family Takaful certificate providing protection benefits through Tabarru\' contributions and Wakalah administration.',
+      majorObligations: 'Pay contributions on time, provide accurate health information, and keep nominee details updated.',
+      financialPenaltyLatePayment: 'Certificate benefits may be affected if contributions are not paid within the grace period stated in the certificate.',
+      earlyTerminationTerms: 'Surrender value, if any, is subject to the certificate terms and applicable charges.',
+      contactComplaintChannel: 'Contact D8 Amanah Takaful Berhad customer care or the relevant Malaysian regulatory complaint channel.',
+    },
+  },
+  // ==========================================
   // MALAYSIA — PERSONAL FINANCING-I (5 Products)
   // ==========================================
   {

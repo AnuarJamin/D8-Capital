@@ -44,7 +44,7 @@ export const FinancingCataloguePage: React.FC<FinancingCataloguePageProps> = ({
     { id: 'all', label: t('common.all') },
     ...countryConfig.activeCategories.map((cat) => ({
       id: cat,
-      label: t(`category.${cat}` as any),
+      label: cat === 'takaful' ? 'Takaful Protection' : t(`category.${cat}` as any),
     })),
   ];
 

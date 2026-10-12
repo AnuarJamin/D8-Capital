@@ -3,6 +3,7 @@ import { FinancingProduct } from '../types';
 import { useI18n } from '../i18n';
 import { useDemoStore } from '../store/DemoStore';
 import { PROVIDERS } from '../data/providers';
+import { PRODUCT_IMAGES } from '../data/productImages';
 import { formatCurrency, formatProfitRate, calculateFinancing } from '../services/calculator';
 import { DemoDataLabel } from './DemoDataLabel';
 import { PdsModal } from './PdsModal';
@@ -29,11 +30,15 @@ export const FinancingCard: React.FC<FinancingCardProps> = ({
 
   const provider = PROVIDERS.find((p) => p.id === product.providerId);
   const isCompared = state.selectedCompareProductIds.includes(product.id);
+  const isTakaful = product.productKind === 'TAKAFUL';
+  const productImage = PRODUCT_IMAGES[product.category];
 
   // Calculate indicative monthly instalment based on provided sample or default
   const defaultAmount = sampleAmount || (product.country === 'MY' ? 50000 : product.country === 'TR' ? 1200000 : 100000);
   const defaultTenure = sampleTenureYears || (product.country === 'MY' ? 7 : product.country === 'TR' ? 4 : 3);
-  const calculation = calculateFinancing(defaultAmount, product.annualProfitRate, defaultTenure, product.rateMethod);
+  const calculation = isTakaful
+    ? undefined
+    : calculateFinancing(defaultAmount, product.annualProfitRate, defaultTenure, product.rateMethod);
 
   return (
     <>
@@ -43,6 +48,19 @@ export const FinancingCard: React.FC<FinancingCardProps> = ({
           product.featured ? 'ring-1 ring-[#c4a67e]/50 border-[#c4a67e]/30' : 'border-white/10'
         }`}
       >
+        <div className="relative h-36 overflow-hidden">
+          <img
+            src={productImage.src}
+            alt={productImage.alt}
+            loading="lazy"
+            className="h-full w-full object-cover transition duration-500 hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/20 to-transparent" />
+          <span className="absolute bottom-3 left-4 rounded-full border border-white/20 bg-black/45 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-white backdrop-blur-sm">
+            {isTakaful ? 'Takaful Protection' : product.category}
+          </span>
+        </div>
+
         {/* Featured Tag */}
         {product.featured && (
           <div className="bg-[#c4a67e] text-black text-[10px] font-mono font-bold uppercase tracking-wider py-1 px-4 flex items-center justify-between">
@@ -86,7 +104,32 @@ export const FinancingCard: React.FC<FinancingCardProps> = ({
 
           {/* Key Metrics Bento */}
           <div className="grid grid-cols-2 gap-2.5 p-3.5 bg-[#141414] rounded-xl border border-white/5">
-            <div>
+            {isTakaful ? (
+              <>
+                <div>
+                  <span className="text-[9px] uppercase font-mono font-bold text-white/40 block tracking-wider">
+                    Annual Contribution
+                  </span>
+                  <span className="text-xl font-bold text-[#c4a67e] font-mono block mt-0.5">
+                    {formatCurrency(product.takafulData?.annualContribution || 0, product.country, locale)}
+                  </span>
+                  <span className="text-[10px] text-white/30 font-medium">
+                    {product.takafulData?.contributionFrequency}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[9px] uppercase font-mono font-bold text-white/40 block tracking-wider">
+                    Coverage Amount
+                  </span>
+                  <span className="text-xl font-bold text-white font-mono block mt-0.5">
+                    {formatCurrency(product.takafulData?.coverageAmount || 0, product.country, locale)}
+                  </span>
+                  <span className="text-[10px] text-white/30">Protection benefit</span>
+                </div>
+              </>
+            ) : (
+              <>
+              <div>
               <span className="text-[9px] uppercase font-mono font-bold text-white/40 block tracking-wider">
                 {t('common.profitRate')}
               </span>
@@ -106,13 +149,15 @@ export const FinancingCard: React.FC<FinancingCardProps> = ({
               </span>
               <div className="flex items-baseline gap-1 mt-0.5">
                 <span className="text-xl font-bold text-white font-mono">
-                  {formatCurrency(calculation.monthlyInstalment, product.country, locale)}
+                {formatCurrency(calculation?.monthlyInstalment || 0, product.country, locale)}
                 </span>
               </div>
               <span className="text-[10px] text-white/30">
                 {formatCurrency(defaultAmount, product.country, locale)} / {defaultTenure}y
               </span>
             </div>
+              </>
+            )}
           </div>
 
           {/* Highlights */}
@@ -146,7 +191,7 @@ export const FinancingCard: React.FC<FinancingCardProps> = ({
             </button>
 
             {/* PDS Button for Malaysia */}
-            {product.country === 'MY' && product.pdsData && (
+            {product.pdsData && (
               <button
                 type="button"
                 onClick={() => setShowPds(true)}
@@ -162,10 +207,10 @@ export const FinancingCard: React.FC<FinancingCardProps> = ({
           {/* Primary Apply CTA */}
           <button
             type="button"
-            onClick={() => onApply(product)}
+            onClick={() => (isTakaful ? setShowPds(true) : onApply(product))}
             className="px-4 py-2 bg-[#c4a67e] hover:bg-[#d4b890] text-black text-xs font-bold rounded-lg transition shadow-md flex items-center gap-1.5 cursor-pointer"
           >
-            <span>{t('common.applyNow')}</span>
+            <span>{isTakaful ? 'View Coverage' : t('common.applyNow')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>

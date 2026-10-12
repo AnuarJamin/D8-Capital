@@ -10,7 +10,8 @@ export type FinancingCategoryType =
   | 'business'
   | 'equipment'
   | 'trade'
-  | 'project';
+  | 'project'
+  | 'takaful';
 
 export type ShariahStructure =
   | 'Tawarruq / Commodity Murabahah'
@@ -21,6 +22,7 @@ export type ShariahStructure =
   | 'Musharakah'
   | 'Mudarabah'
   | 'Istisna'
+  | 'Tabarru / Wakalah'
   | 'Illustrative Shariah Structure';
 
 export type RateMethod = 'flat' | 'reducing';
@@ -85,6 +87,13 @@ export interface FinancingProduct {
   requiredDocumentsSummary: string[];
   keyFeatures: string[];
   targetAudience: 'Individual' | 'SME' | 'Corporate';
+  productKind?: 'FINANCING' | 'TAKAFUL';
+  takafulData?: {
+    coverageType: string;
+    coverageAmount: number;
+    annualContribution: number;
+    contributionFrequency: string;
+  };
   pdsData?: {
     productDescription: string;
     majorObligations: string;

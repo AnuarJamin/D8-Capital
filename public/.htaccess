@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Let Vite-built assets and existing files be served normally.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Support client-side navigation when Apache receives a deep link.
+RewriteRule ^ index.html [L]

@@ -18,6 +18,7 @@ export const PdsModal: React.FC<PdsModalProps> = ({ product, isOpen, onClose }) 
 
   const provider = PROVIDERS.find((p) => p.id === product.providerId);
   const pds = product.pdsData;
+  const isTakaful = product.productKind === 'TAKAFUL';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-fadeIn">
@@ -89,22 +90,32 @@ export const PdsModal: React.FC<PdsModalProps> = ({ product, isOpen, onClose }) 
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-[10px] uppercase font-bold text-slate-500 block">Facility Limit</span>
-                <span className="text-xs font-bold text-slate-900 font-mono">
-                  {formatCurrency(product.minAmount, product.country, locale)} – {formatCurrency(product.maxAmount, product.country, locale)}
-                </span>
-              </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-[10px] uppercase font-bold text-slate-500 block">Profit Rate</span>
-                <span className="text-xs font-bold text-emerald-800 font-mono">
-                  {formatProfitRate(product.annualProfitRate)} ({product.rateMethod === 'flat' ? 'Flat' : 'Reducing'})
-                </span>
-              </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="text-[10px] uppercase font-bold text-slate-500 block">Tenure Range</span>
-                <span className="text-xs font-bold text-slate-900">
-                  {product.minTenureYears} to {product.maxTenureYears} Years
-                </span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                    {isTakaful ? 'Coverage Amount' : 'Facility Limit'}
+                  </span>
+                  <span className="text-xs font-bold text-slate-900 font-mono">
+                    {isTakaful
+                      ? formatCurrency(product.takafulData?.coverageAmount || 0, product.country, locale)
+                      : `${formatCurrency(product.minAmount, product.country, locale)} – ${formatCurrency(product.maxAmount, product.country, locale)}`}
+                  </span>
+                </div>
+                <div className="p-3 bg-white rounded-xl border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                    {isTakaful ? 'Annual Contribution' : 'Profit Rate'}
+                  </span>
+                  <span className="text-xs font-bold text-emerald-800 font-mono">
+                    {isTakaful
+                      ? formatCurrency(product.takafulData?.annualContribution || 0, product.country, locale)
+                      : `${formatProfitRate(product.annualProfitRate)} (${product.rateMethod === 'flat' ? 'Flat' : 'Reducing'})`}
+                  </span>
+                </div>
+                <div className="p-3 bg-white rounded-xl border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                    {isTakaful ? 'Contribution Frequency' : 'Tenure Range'}
+                  </span>
+                  <span className="text-xs font-bold text-slate-900">
+                    {isTakaful ? product.takafulData?.contributionFrequency : `${product.minTenureYears} to ${product.maxTenureYears} Years`}
+                  </span>
               </div>
               <div className="p-3 bg-white rounded-xl border border-slate-200">
                 <span className="text-[10px] uppercase font-bold text-slate-500 block">Margin</span>
@@ -132,7 +143,7 @@ export const PdsModal: React.FC<PdsModalProps> = ({ product, isOpen, onClose }) 
           <div className="border border-slate-200 rounded-2xl p-4 bg-emerald-50/60 border-emerald-200">
             <h4 className="font-bold text-emerald-950 mb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
               <span className="w-5 h-5 rounded-full bg-emerald-700 text-white flex items-center justify-center text-[10px]">5</span>
-              What if I fully settle before maturity (Ibra\')?
+                  {isTakaful ? 'Certificate Termination & Benefits' : 'What if I fully settle before maturity (Ibra\')?'}
             </h4>
             <p className="text-emerald-900 text-xs leading-relaxed font-medium">
               {product.earlySettlementIbra}
